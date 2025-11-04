@@ -1,0 +1,85 @@
+{
+  "user": "Write one complete English movie review sentences (about 20–40 words). Keep it natural and fluent, avoid repetition, and end with a period.",
+  "data": [
+    {
+      "prompt": "I rented I AM CURIOUS-YELLOW from my video store because ",
+      "language": "en",
+      "source_dataset": "stanfordnlp/imdb",
+      "source_split": "train",
+      "source_url": "https://huggingface.co/datasets/stanfordnlp/imdb/viewer/plain_text/train",
+      "note": "L49"
+    },
+    {
+      "prompt": "In particular she wants to ",
+      "language": "en",
+      "source_dataset": "stanfordnlp/imdb",
+      "source_split": "train",
+      "source_url": "https://huggingface.co/datasets/stanfordnlp/imdb/viewer/plain_text/train",
+      "note": "L50 (first clause truncated)"
+    },
+    {
+      "prompt": "It does not matter what one's political views are because ",
+      "language": "en",
+      "source_dataset": "stanfordnlp/imdb",
+      "source_split": "train",
+      "source_url": "https://huggingface.co/datasets/stanfordnlp/imdb/viewer/plain_text/train",
+      "note": "Based on L54"
+    },
+    {
+      "prompt": "This film is interesting as an experiment but ",
+      "language": "en",
+      "source_dataset": "stanfordnlp/imdb",
+      "source_split": "train",
+      "source_url": "https://huggingface.co/datasets/stanfordnlp/imdb/viewer/plain_text/train",
+      "note": "L59"
+    },
+    {
+      "prompt": "This film was probably inspired by ",
+      "language": "en",
+      "source_dataset": "stanfordnlp/imdb",
+      "source_split": "train",
+      "source_url": "https://huggingface.co/datasets/stanfordnlp/imdb/viewer/plain_text/train",
+      "note": "L62"
+    },
+    {
+      "prompt": "Whoever wrote the screenplay for this movie obviously ",
+      "language": "en",
+      "source_dataset": "stanfordnlp/imdb",
+      "source_split": "train",
+      "source_url": "https://huggingface.co/datasets/stanfordnlp/imdb/viewer/plain_text/train",
+      "note": "L72"
+    },
+    {
+      "prompt": "When I first saw a glimpse of this movie, I quickly noticed the actress who was ",
+      "language": "en",
+      "source_dataset": "stanfordnlp/imdb",
+      "source_split": "train",
+      "source_url": "https://huggingface.co/datasets/stanfordnlp/imdb/viewer/plain_text/train",
+      "note": "L75-L76"
+    },
+    {
+      "prompt": "It is the kind of movie that looks like it was ",
+      "language": "en",
+      "source_dataset": "stanfordnlp/imdb",
+      "source_split": "train",
+      "source_url": "https://huggingface.co/datasets/stanfordnlp/imdb/viewer/plain_text/train",
+      "note": "Based on L80"
+    },
+    {
+      "prompt": "It was great to see some of my favorite stars of ",
+      "language": "en",
+      "source_dataset": "stanfordnlp/imdb",
+      "source_split": "train",
+      "source_url": "https://huggingface.co/datasets/stanfordnlp/imdb/viewer/plain_text/train",
+      "note": "L92"
+    },
+    {
+      "prompt": "I cannot believe that those praising this movie are ",
+      "language": "en",
+      "source_dataset": "stanfordnlp/imdb",
+      "source_split": "train",
+      "source_url": "https://huggingface.co/datasets/stanfordnlp/imdb/viewer/plain_text/train",
+      "note": "L97 (lightly normalized)"
+    }
+  ]
+}

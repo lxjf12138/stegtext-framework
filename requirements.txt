@@ -1,0 +1,7 @@
+# Derived from pyproject and in-repo imports (via scripts):
+# - Core: numpy, torch
+# - HF sources (scripts/hf_source_recipes.py): transformers
+
+numpy>=1.23
+torch>=1.12
+transformers>=4.41

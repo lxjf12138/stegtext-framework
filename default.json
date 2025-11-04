@@ -1,0 +1,77 @@
+{
+  "qwen2.5-3b": {
+    "model_path": "~/path/Qwen2.5-3B",
+    "prompt": {
+      "type": "plain"
+    },
+    "stop_tokens": ["<|im_end|>", "<|endoftext|>"] ,
+    "think_token": "</think>",
+    "tokenizer": {
+      "use_fast": false,
+      "trust_remote_code": true
+    },
+    "model": {
+      "trust_remote_code": true
+    }
+  },
+  "qwen3-4b": {
+    "model_path": "~/path/Qwen3-4B",
+    "prompt": {
+      "type": "chat"
+    },
+    "stop_tokens": ["<|im_end|>", "<|endoftext|>", "<|extra_im_end|>", "<|im_start_response|>"],
+    "think_token": "</think>",
+    "tokenizer": {
+      "use_fast": false,
+      "trust_remote_code": true
+    },
+    "model": {
+      "trust_remote_code": true
+    }
+  },
+  "llama3-8b-instruct": {
+    "model_path": "~/path/Meta-Llama-3-8B-Instruct",
+    "prompt": {
+      "type": "plain",
+      "suffix": "\n\n",
+      "add_bos": true
+    },
+    "stop_tokens": ["<|eot_id|>", "<|end_of_text|>", "</s>", "<|start_header_id|>"],
+    "tokenizer": {},
+    "model": {
+      "device_map": "auto",
+      "torch_dtype": "bfloat16",
+      "low_cpu_mem_usage": true
+    }
+  },
+  "deepseek-r1-distill-qwen-7b": {
+    "model_path": "~/path/DeepSeek-R1-Distill-Qwen-7B",
+    "prompt": {
+      "type": "chat",
+      "system": "You are a helpful assistant."
+    },
+    "stop_tokens": ["<｜end▁of▁sentence｜>"],
+    "think_token": "</think>",
+    "tokenizer": {
+      "use_fast": false
+    },
+    "model": {
+      "trust_remote_code": true,
+      "device_map": "auto"
+    }
+  },
+  "glm-4-9b-chat": {
+    "model_path": "~/path/glm-4-9b-chat",
+    "prompt": {
+      "type": "chat",
+      "add_bos": true
+    },
+    "stop_tokens": ["<|endoftext|>", "<eop>","<|user|>"] ,
+    "tokenizer": {
+      "trust_remote_code": true
+    },
+    "model": {
+      "trust_remote_code": true
+    }
+  }
+}

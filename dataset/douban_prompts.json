@@ -1,0 +1,85 @@
+{
+  "user": "请写一段中文电影评论，语义完整、自然流畅，使用中文标点并以句号收尾。",
+  "data": [
+    {
+      "prompt": "电影评论: 好喜欢刘昊然彭昱畅这个电影，",
+      "language": "zh",
+      "source_dataset": "tracywong117/spam-douban-movie-review",
+      "source_split": "train",
+      "source_url": "https://huggingface.co/datasets/tracywong117/spam-douban-movie-review/viewer/train",
+      "note": "Excerpt from dataset viewer rows; see sample lines around L1128-L1130."
+    },
+    {
+      "prompt": "电影评论: 在我心里是个4星的商业片。但看到一堆",
+      "language": "zh",
+      "source_dataset": "tracywong117/spam-douban-movie-review",
+      "source_split": "train",
+      "source_url": "https://huggingface.co/datasets/tracywong117/spam-douban-movie-review/viewer/train",
+      "note": "L1142-L1144"
+    },
+    {
+      "prompt": "电影评论: 确实没有前两季好看，",
+      "language": "zh",
+      "source_dataset": "tracywong117/spam-douban-movie-review",
+      "source_split": "train",
+      "source_url": "https://huggingface.co/datasets/tracywong117/spam-douban-movie-review/viewer/train",
+      "note": "L1156-L1158"
+    },
+    {
+      "prompt": "电影评论: 春节档唯一的一部喜剧片,",
+      "language": "zh",
+      "source_dataset": "tracywong117/spam-douban-movie-review",
+      "source_split": "train",
+      "source_url": "https://huggingface.co/datasets/tracywong117/spam-douban-movie-review/viewer/train",
+      "note": "L1169-L1173"
+    },
+    {
+      "prompt": "电影评论: 今天刚看过，真的特别喜欢，好",
+      "language": "zh",
+      "source_dataset": "tracywong117/spam-douban-movie-review",
+      "source_split": "train",
+      "source_url": "https://huggingface.co/datasets/tracywong117/spam-douban-movie-review/viewer/train",
+      "note": "L1182-L1186"
+    },
+    {
+      "prompt": "电影评论: 实话讲，唐探3，在电影院看，",
+      "language": "zh",
+      "source_dataset": "tracywong117/spam-douban-movie-review",
+      "source_split": "train",
+      "source_url": "https://huggingface.co/datasets/tracywong117/spam-douban-movie-review/viewer/train",
+      "note": "L1198-L1200"
+    },
+    {
+      "prompt": "电影评论: 为了赵今麦和沈月看的",
+      "language": "zh",
+      "source_dataset": "tracywong117/spam-douban-movie-review",
+      "source_split": "train",
+      "source_url": "https://huggingface.co/datasets/tracywong117/spam-douban-movie-review/viewer/train",
+      "note": "L1210-L1214"
+    },
+    {
+      "prompt": "电影评论: 剧情虽然很多bug，但这些",
+      "language": "zh",
+      "source_dataset": "tracywong117/spam-douban-movie-review",
+      "source_split": "train",
+      "source_url": "https://huggingface.co/datasets/tracywong117/spam-douban-movie-review/viewer/train",
+      "note": "L1253-L1255 (em dash removed)"
+    },
+    {
+      "prompt": "电影评论: 真的评论不够骂 我都",
+      "language": "zh",
+      "source_dataset": "tracywong117/spam-douban-movie-review",
+      "source_split": "train",
+      "source_url": "https://huggingface.co/datasets/tracywong117/spam-douban-movie-review/viewer/train",
+      "note": "L1276-L1281"
+    },
+    {
+      "prompt": "电影评论: 看着还挺嗨的，就是凶手",
+      "language": "zh",
+      "source_dataset": "tracywong117/spam-douban-movie-review",
+      "source_split": "train",
+      "source_url": "https://huggingface.co/datasets/tracywong117/spam-douban-movie-review/viewer/train",
+      "note": "L1348-L1350"
+    }
+  ]
+}
