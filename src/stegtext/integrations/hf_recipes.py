@@ -1,35 +1,20 @@
-#!/usr/bin/env python3
-"""Example recipes for instantiating `HFSource` with chat vs completion models.
+"""Factory functions for building `HFSource` instances around HuggingFace models.
 
-This module shows how to build `HFSource` objects for:
-  * Qwen2.5 chat-style models (using their chat template)
-  * Qwen2.5 completion-style models (plain prompt completion)
-  * Meta-Llama-3 completion-style models (instruction tuned, BOS-required)
-
-The examples avoid JSON-based configuration so you can inspect the Python-level
-construction directly and adapt them for your own projects.
-
-Usage (illustrative):
-
-    from scripts.hf_source_recipes import make_qwen25_source
-
-    source = make_qwen25_source("~/path/Qwen2.5-3B", device="cuda:0", chat=True)
-    candidates = source.init("你好，请用一句话介绍自己。")
-
-Each helper returns a fully initialised `HFSource` placed on the requested
-`device`.  They do not cache the models, so make sure to reuse the returned
-`HFSource` instead of calling the helper repeatedly in a tight loop.
+These helpers centralize recipe-like configuration for common chat/completion
+models so that scripts and library code can share the same construction logic.
+They deliberately avoid heavyweight configuration systems to keep them easy to
+inspect and adapt.
 """
 
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Optional, Sequence
+from typing import Optional, Sequence, Tuple, List, Dict, Any
 
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from stegtext.components.source.hf import HFSource, HFSourceConfig
+from ..components.source.hf import HFSource, HFSourceConfig
 
 __all__ = [
     "make_qwen25_source",
@@ -39,7 +24,7 @@ __all__ = [
     "make_llama3_8b_source",
 ]
 
-
+# Sentinel lists of model-specific end tokens. We convert them to ids during init.
 _QWEN25_END_TOKENS = (
     "<|im_end|>",
     "<|endoftext|>",
@@ -94,12 +79,21 @@ def _load_model_and_tokenizer(
     device: str,
     dtype: Optional[str],
     trust_remote_code: bool,
-    tokenizer_kwargs: Optional[dict] = None,
-    model_kwargs: Optional[dict] = None,
+    tokenizer_kwargs: Optional[Dict[str, Any]] = None,
+    model_kwargs: Optional[Dict[str, Any]] = None,
 ):
     tok_kwargs = dict(tokenizer_kwargs or {})
+    model_path_expanded = _expand(model_path)
+    try:
+        is_local = Path(model_path_expanded).exists()
+    except Exception:
+        is_local = False
+
+    # If loading from a local directory, avoid any network hits
+    if is_local:
+        tok_kwargs.setdefault("local_files_only", True)
     tokenizer = AutoTokenizer.from_pretrained(
-        _expand(model_path),
+        model_path_expanded,
         trust_remote_code=trust_remote_code,
         **tok_kwargs,
     )
@@ -107,10 +101,13 @@ def _load_model_and_tokenizer(
     mdl_kwargs = dict(model_kwargs or {})
     torch_dtype = _resolve_dtype(dtype or mdl_kwargs.pop("torch_dtype", None))
     if torch_dtype is not None:
-        mdl_kwargs["torch_dtype"] = torch_dtype
+        # Prefer modern Transformers kwarg to avoid deprecation warnings
+        mdl_kwargs["dtype"] = torch_dtype
 
+    if is_local:
+        mdl_kwargs.setdefault("local_files_only", True)
     model = AutoModelForCausalLM.from_pretrained(
-        _expand(model_path),
+        model_path_expanded,
         trust_remote_code=trust_remote_code,
         **mdl_kwargs,
     )
@@ -119,7 +116,7 @@ def _load_model_and_tokenizer(
     return tokenizer, model
 
 
-def _token_id(tokenizer, token: Optional[object]) -> Optional[int]:
+def _token_id(tokenizer, token: Optional[Any]) -> Optional[int]:
     if token is None:
         return None
     if isinstance(token, int):
@@ -135,10 +132,10 @@ def _token_id(tokenizer, token: Optional[object]) -> Optional[int]:
     return int(tid)
 
 
-def _convert_stop_tokens(tokenizer, tokens: Sequence[object]) -> list[int]:
+def _convert_stop_tokens(tokenizer, tokens: Sequence[Any]) -> List[int]:
     if not tokens:
         raise ValueError("end_tokens must be provided")
-    ids: list[int] = []
+    ids: List[int] = []
     seen: set[int] = set()
     for tok in tokens:
         tid = _token_id(tokenizer, tok)
@@ -159,7 +156,7 @@ def _build_chat_cfg(
     top_k: Optional[int],
     top_p: Optional[float],
     system_prompt: Optional[str],
-    end_tokens: Sequence[object],
+    end_tokens: Sequence[Any],
     think_token: Optional[str] = None,
     think_max_steps: int = 4096,
 ) -> HFSourceConfig:
@@ -188,7 +185,7 @@ def _build_completion_cfg(
     top_p: Optional[float],
     template: str,
     system_prompt: Optional[str] = None,
-    end_tokens: Sequence[object],
+    end_tokens: Sequence[Any],
     think_token: Optional[str] = None,
     think_max_steps: int = 4096,
 ) -> HFSourceConfig:
@@ -219,9 +216,9 @@ def make_qwen25_source(
     device: str = "cuda:0",
     dtype: Optional[str] = "float16",
     chat: bool = True,
-    temperature: float = 0.8,
-    top_k: Optional[int] = 50,
-    top_p: Optional[float] = 0.9,
+    temperature: float = 1.0,
+    top_k: Optional[int] = 16,
+    top_p: Optional[float] = 1.0,
     system_prompt: Optional[str] = None,
 ) -> HFSource:
     tokenizer, model = _load_model_and_tokenizer(
@@ -237,7 +234,7 @@ def make_qwen25_source(
             tokenizer,
             model,
             temperature=temperature,
-            top_k=None,
+            top_k=top_k,
             top_p=top_p,
             system_prompt=system_prompt,
             end_tokens=_QWEN25_END_TOKENS,
@@ -271,8 +268,8 @@ def make_qwen3_source(
     enable_thinking: bool = True,
     think_token: str = "</think>",
     temperature: float = 1.0,
-    top_k: Optional[int] = 50,
-    top_p: Optional[float] = 0.9,
+    top_k: Optional[int] = 16,
+    top_p: Optional[float] = 1.0,
     system_prompt: Optional[str] = None,
 ) -> HFSource:
     tokenizer, model = _load_model_and_tokenizer(
@@ -290,7 +287,7 @@ def make_qwen3_source(
             tokenizer,
             model,
             temperature=temperature,
-            top_k=None,
+            top_k=top_k,
             top_p=top_p,
             system_prompt=system_prompt,
             end_tokens=_QWEN3_END_TOKENS,
@@ -327,9 +324,9 @@ def make_deepseek_source(
     chat: bool = True,
     enable_thinking: bool = True,
     think_token: str = "</think>",
-    temperature: float = 0.8,
-    top_k: Optional[int] = 50,
-    top_p: Optional[float] = 0.9,
+    temperature: float = 1.0,
+    top_k: Optional[int] = 16,
+    top_p: Optional[float] = 1.0,
     system_prompt: Optional[str] = None,
 ) -> HFSource:
     tokenizer, model = _load_model_and_tokenizer(
@@ -347,7 +344,7 @@ def make_deepseek_source(
             tokenizer,
             model,
             temperature=temperature,
-            top_k=None,
+            top_k=top_k,
             top_p=top_p,
             system_prompt=system_prompt,
             end_tokens=_DEEPSEEK_END_TOKENS,
@@ -382,9 +379,9 @@ def make_glm4_source(
     device: str = "cuda:0",
     dtype: Optional[str] = "float16",
     chat: bool = True,
-    temperature: float = 0.8,
-    top_k: Optional[int] = None,
-    top_p: Optional[float] = 0.9,
+    temperature: float = 1.0,
+    top_k: Optional[int] = 16,
+    top_p: Optional[float] = 1.0,
     system_prompt: Optional[str] = None,
 ) -> HFSource:
     tokenizer, model = _load_model_and_tokenizer(
@@ -431,9 +428,9 @@ def make_llama3_8b_source(
     device: str = "cuda:0",
     dtype: Optional[str] = "bfloat16",
     chat: bool = False,
-    temperature: float = 0.7,
-    top_k: Optional[int] = None,
-    top_p: Optional[float] = 0.9,
+    temperature: float = 1.0,
+    top_k: Optional[int] = 16,
+    top_p: Optional[float] = 1.0,
     system_prompt: Optional[str] = None,
 ) -> HFSource:
     tokenizer, model = _load_model_and_tokenizer(
@@ -482,31 +479,3 @@ def make_llama3_8b_source(
             end_tokens=_LLAMA3_END_TOKENS,
         )
     return HFSource(cfg)
-
-
-if __name__ == "__main__":  # pragma: no cover
-    import argparse
-
-    parser = argparse.ArgumentParser(description="Instantiate HFSource recipes")
-    parser.add_argument(
-        "model",
-        choices=["qwen25", "qwen3", "deepseek", "glm4", "llama3"],
-        help="which recipe to instantiate",
-    )
-    parser.add_argument("path", help="local path or HF hub id")
-    parser.add_argument("--device", default="cuda:0")
-    parser.add_argument("--dtype", default=None)
-    args = parser.parse_args()
-
-    if args.model == "qwen25":
-        src = make_qwen25_source(args.path, device=args.device, dtype=args.dtype)
-    elif args.model == "qwen3":
-        src = make_qwen3_source(args.path, device=args.device, dtype=args.dtype)
-    elif args.model == "deepseek":
-        src = make_deepseek_source(args.path, device=args.device, dtype=args.dtype)
-    elif args.model == "glm4":
-        src = make_glm4_source(args.path, device=args.device, dtype=args.dtype)
-    else:
-        src = make_llama3_8b_source(args.path, device=args.device, dtype=args.dtype)
-
-    print(f"HFSource ready: {src}")

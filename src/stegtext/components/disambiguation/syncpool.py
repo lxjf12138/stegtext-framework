@@ -63,9 +63,14 @@ class SyncPool(Disambiguator):
         g = plan.groups.groups[chosen_group_idx]
         mem = g.members
         if g.key.endswith(EOS_STEGA):
-            if len(mem) != 1:
-                raise RuntimeError("SyncPool: EOS group must contain exactly one candidate")
-            return mem[0]
+            info = plan.meta["groups"][chosen_group_idx]
+            raw_p = torch.as_tensor(info["raw_p"], dtype=torch.float64)
+            weights = sanitize1d(raw_p)
+            indices = list(range(len(mem)))
+            chosen_idx = _weighted_choice(indices, weights, rng) if indices else 0
+            chosen = mem[chosen_idx]
+            chosen.p = float(round(float(weights[chosen_idx]), 12)) if len(indices) > 0 else 1.0
+            return chosen
 
         info = plan.meta["groups"][chosen_group_idx]
         raw_p: torch.Tensor = torch.as_tensor(info["raw_p"], dtype=torch.float64)

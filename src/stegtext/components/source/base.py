@@ -8,7 +8,7 @@ from ...core.data import Candidate
 
 # Unique sentinel appended to EOS token byte streams. Make it a long, unlikely
 # ASCII sequence so natural model output will not collide with it.
-EOS_STEGA = b"<eos_stega>"
+EOS_STEGA = b"\xFFeos_stega\xFF"
 
 
 class Source(Protocol):

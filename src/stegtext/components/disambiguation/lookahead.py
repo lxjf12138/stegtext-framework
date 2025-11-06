@@ -111,10 +111,15 @@ class LookAhead(Disambiguator):
     ) -> List[Candidate] | Candidate:
         g = plan.groups.groups[chosen_group_idx]
         if g.key.endswith(EOS_STEGA):
-            if len(g.members) != 1:
-                raise RuntimeError("LookAhead: EOS group must contain exactly one candidate")
-            self.last_selected = g.members[0]
-            return g.members[0]
+            info = plan.meta["groups"][chosen_group_idx]
+            raw_p = torch.as_tensor(info["raw_p"], dtype=torch.float64)
+            weights = sanitize1d(raw_p)
+            indices = list(range(len(g.members)))
+            chosen_idx = _weighted_choice(indices, weights, rng) if indices else 0
+            chosen = g.members[chosen_idx]
+            chosen.p = float(round(float(weights[chosen_idx]), 12)) if len(indices) > 0 else 1.0
+            self.last_selected = chosen
+            return chosen
 
         mem = g.members  # List[Candidate]（当前组的成员，含完整 tokens）
         info = plan.meta["groups"][chosen_group_idx]

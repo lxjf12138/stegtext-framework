@@ -16,9 +16,18 @@ def group_by_prefix_bytes(cands: List[Candidate]) -> GroupingResult:
     for c in non_sorted:
         placed = False
         if c.vb.endswith(EOS_STEGA):
-            groups.append(Group(c))
+            # Merge EOS variants that share the same visible bytes into a single group.
+            for g in groups:
+                if g.key == c.vb:
+                    g.add(c)
+                    placed = True
+                    break
+            if not placed:
+                groups.append(Group(c))
             continue
         for g in groups:
+            if g.key.endswith(EOS_STEGA):
+                continue
             key = g.key
             if c.vb.startswith(key):
                 g.add(c); placed = True; break
@@ -33,5 +42,4 @@ def group_by_prefix_bytes(cands: List[Candidate]) -> GroupingResult:
     s = float(t.sum().item())
     gp = (t / s) if s > 0 else torch.full((len(groups) or 1,), 1.0/(len(groups) or 1), dtype=torch.float64)
     return GroupingResult(groups=groups, group_probs=gp, stats={})
-
 

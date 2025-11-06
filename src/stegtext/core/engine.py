@@ -4,10 +4,11 @@ from __future__ import annotations
 
 import hashlib
 from dataclasses import dataclass
-from typing import Any, List, Optional, Sequence, Tuple
+from itertools import repeat, cycle
+from typing import Any, Iterator, List, Optional, Sequence, Tuple
 
 import torch
-from stegtext.components.source.base import EOS_STEGA 
+from stegtext.components.source.base import EOS_STEGA
 from .contracts import Disambiguator, Source
 from .data import Candidate
 from .rng import CSPRNG, derive_rng
@@ -29,6 +30,18 @@ class DecodeOutput:
     bits: str
     steps: int
     stop_reason: str
+
+
+@dataclass
+class SequenceEncodeResult:
+    sentences: List[EncodeOutput]
+    emitted_bits: str
+
+
+@dataclass
+class SequenceDecodeResult:
+    sentences: List[DecodeOutput]
+    bits: str
 
 
 @dataclass
@@ -56,6 +69,11 @@ class StegoEngine:
         self.dis = disambiguator
         self.coder = coder
         self.hooks: List[Any] = list(hooks or [])
+        self.init()
+
+    def init(self) -> None:
+        self.dis.init()
+        self.coder.init()
 
     # ------------------------------------------------------------------
     def encode(
@@ -104,6 +122,103 @@ class StegoEngine:
             max_tokens=None,
         )
         return DecodeOutput(bits=result.bits, steps=result.steps, stop_reason=result.stop_reason)
+
+    # ------------------------------------------------------------------
+    def encode_sequence(
+        self,
+        prompts: Sequence[str] | str,
+        bit_stream: str,
+        *,
+        rng: CSPRNG,
+        max_steps: Optional[int] = None,
+        max_tokens: Optional[int] = None,
+        max_sentences: Optional[int] = None,
+    ) -> SequenceEncodeResult:
+        if isinstance(prompts, str):
+            prompt_iter: Iterator[str] = repeat(prompts)
+        else:
+            prompts = list(prompts)
+            if not prompts:
+                raise ValueError("encode_sequence requires at least one prompt")
+            prompt_iter = cycle(prompts) if len(prompts) > 1 else repeat(prompts[0])
+
+        total_bits = len(bit_stream)
+        remaining_bits = bit_stream
+        consumed_bits = 0
+        sentences: List[EncodeOutput] = []
+        emitted_chunks: List[str] = []
+
+        index = 0
+        self.init()
+
+        while consumed_bits < total_bits:
+            if max_sentences is not None and index >= max_sentences:
+                break
+            try:
+                prompt = next(prompt_iter)
+            except StopIteration:
+                break
+            sentence_rng = derive_rng(rng, f"sequence:{index}")
+            result = self.encode(
+                prompt,
+                remaining_bits,
+                rng=sentence_rng,
+                max_steps=max_steps,
+                max_tokens=max_tokens,
+            )
+            sentences.append(result)
+            emitted_chunks.append(result.emitted_bits)
+
+            use = min(len(result.emitted_bits), max(0, total_bits - consumed_bits))
+            if use > 0:
+                remaining_bits = remaining_bits[use:]
+                consumed_bits += use
+            elif isinstance(prompts, str):
+                raise RuntimeError("encode_sequence: sentence produced no bits; unable to make progress")
+
+            index += 1
+
+        if consumed_bits < total_bits:
+            raise RuntimeError("encode_sequence: prompts did not provide enough capacity for the payload")
+
+        return SequenceEncodeResult(sentences=sentences, emitted_bits="".join(emitted_chunks))
+
+    # ------------------------------------------------------------------
+    def decode_sequence(
+        self,
+        prompts: Sequence[str] | str,
+        visible_texts: Sequence[str],
+        *,
+        rng: CSPRNG,
+        max_steps: Optional[int] = None,
+    ) -> SequenceDecodeResult:
+        if isinstance(prompts, str):
+            prompt_iter: Iterator[str] = repeat(prompts)
+        else:
+            prompts = list(prompts)
+            if not prompts:
+                raise ValueError("decode_sequence requires at least one prompt")
+            prompt_iter = cycle(prompts) if len(prompts) > 1 else repeat(prompts[0])
+        texts = list(visible_texts)
+        sentences: List[DecodeOutput] = []
+        bits: List[str] = []
+        self.init()
+        for index, text in enumerate(texts):
+            try:
+                prompt = next(prompt_iter)
+            except StopIteration:
+                raise RuntimeError("decode_sequence: insufficient prompts provided")
+            sentence_rng = derive_rng(rng, f"sequence:{index}")
+            result = self.decode(
+                prompt,
+                text,
+                rng=sentence_rng,
+                max_steps=max_steps,
+            )
+            sentences.append(result)
+            bits.append(result.bits)
+
+        return SequenceDecodeResult(sentences=sentences, bits="".join(bits))
 
     def _run(
         self,
