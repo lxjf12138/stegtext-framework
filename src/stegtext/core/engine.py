@@ -315,9 +315,7 @@ class _SentenceRunner:
                 self.stop_reason = "max_steps"
                 break
 
-            if all(c.is_eos for c in self.current_candidates):
-                if len(self.current_candidates) != 1:
-                    raise RuntimeError("multiple EOS candidates present; disambiguator must collapse")
+            if len(self.current_candidates) == 1 and self.current_candidates[0].is_eos:
                 self.final_candidate = self.current_candidates[0]
                 self.finished = True
                 self.stop_reason = "eos"
