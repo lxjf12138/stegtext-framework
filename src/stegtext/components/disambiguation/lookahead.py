@@ -4,8 +4,6 @@ from typing import List, Dict, Any, Callable, Optional
 import os
 import torch
 
-from stegtext.components.source.base import EOS_STEGA
-
 from ...core.data import Candidate
 from ...core.grouping import group_by_prefix_bytes
 from ...core.contracts import Disambiguator, Plan, SupportsRandom
@@ -45,19 +43,12 @@ class LookAhead(Disambiguator):
     """
 
     def __init__(self, m_reps: Optional[int] = None) -> None:
-        """Look-ahead disambiguator with optional multi-representative sampling.
+        """Create the theorem-covered single-representative LAS variant.
 
-        m_reps controls how many with-replacement samples are drawn from
-        S_prefix to estimate the mixture for the next step:
-          - m_reps <= 1 (default): legacy single-representative behavior.
-          - m_reps > 1: sample m_reps times with replacement according to
-            intra weights over S_prefix. For each sampled prefix, expand its
-            children and multiply their probabilities by s/m where s is the
-            total intra mass over S_prefix. This preserves per-child token
-            prefixes and is an unbiased Monte-Carlo estimate of the full
-            mixture. Larger m reduces variance.
-
-        m_reps can also be provided via environment variable LOOKAHEAD_M.
+        ``m_reps`` is retained only for backwards-compatible configuration.
+        The reference algorithm proved in the paper samples exactly one
+        representative from ``S_prefix``; values other than one are rejected
+        so experiments cannot silently run an unproved Monte-Carlo variant.
         """
         self._last_meta: Dict[str, Any] = {}
         self.last_selected: Optional[Candidate] = None
@@ -67,6 +58,11 @@ class LookAhead(Disambiguator):
             except Exception:
                 m_reps = 1
         self.m_reps: int = int(m_reps if m_reps is not None else 1)
+        if self.m_reps != 1:
+            raise ValueError(
+                "LookAhead reference mode requires m_reps=1; "
+                "multi-representative sampling is not covered by the LAS theorem"
+            )
 
     # lifecycle
     def init(self) -> None:
@@ -110,18 +106,24 @@ class LookAhead(Disambiguator):
         source_generate: Callable[[torch.LongTensor, Optional[int]], List[Candidate]],
     ) -> List[Candidate] | Candidate:
         g = plan.groups.groups[chosen_group_idx]
-        if g.key.endswith(EOS_STEGA):
+        mem = g.members  # List[Candidate]（当前组的成员，含完整 tokens）
+
+        # A terminal-only group has no valid strict extension after EOS.  The
+        # representative is sampled by the exact conditional group weights and
+        # returned as a singleton terminal outcome.  Terminal candidates that
+        # merely extend a shorter nonterminal group key remain in S_partial and
+        # are retained instead of forcing premature termination.
+        if mem and all(m.is_eos for m in mem):
             info = plan.meta["groups"][chosen_group_idx]
             raw_p = torch.as_tensor(info["raw_p"], dtype=torch.float64)
             weights = sanitize1d(raw_p)
-            indices = list(range(len(g.members)))
-            chosen_idx = _weighted_choice(indices, weights, rng) if indices else 0
-            chosen = g.members[chosen_idx]
-            chosen.p = float(round(float(weights[chosen_idx]), 12)) if len(indices) > 0 else 1.0
+            indices = list(range(len(mem)))
+            chosen_idx = _weighted_choice(indices, weights, rng)
+            chosen = mem[chosen_idx]
+            chosen.p = 1.0
             self.last_selected = chosen
             return chosen
 
-        mem = g.members  # List[Candidate]（当前组的成员，含完整 tokens）
         info = plan.meta["groups"][chosen_group_idx]
         raw_p: torch.Tensor = torch.as_tensor(info["raw_p"], dtype=torch.float64)
         sprefix_idx: List[int] = info["sprefix_idx"]
@@ -144,34 +146,22 @@ class LookAhead(Disambiguator):
         # (4) 展开：若 ssync 是 eos 或不存在，children 为空；否则继续生成
         if ssync is None:
             raise RuntimeError("LookAhead: unable to select sync candidate")
-        children: List[Candidate] = []
-        if not ssync.is_eos:
-            if self.m_reps > 1 and sprefix_idx:
-                # 有放回 m 次抽样；对相同前缀计数，仅前向一次，再按 count*(s/m) 赋权
-                m = int(max(1, self.m_reps))
-                per = (s / float(m)) if m > 0 else 0.0
-                draw_cnt: Dict[int, int] = {}
-                for _ in range(m):
-                    ridx = _weighted_choice(sprefix_idx, intra, rng)
-                    draw_cnt[ridx] = draw_cnt.get(ridx, 0) + 1
-                if per > 0.0:
-                    for ridx, cnt in draw_cnt.items():
-                        rnode = mem[ridx]
-                        ch = list(source_generate(rnode.tokens, rnode.prompt_len) or [])
-                        w = per * float(cnt)
-                        for c in ch:
-                            c.p = float(round(float(c.p) * w, 12))
-                            children.append(c)
-            else:
-                # 单代表路径：只展开 ssync，一次性整体乘以 s
-                children = list(source_generate(ssync.tokens, ssync.prompt_len) or [])
-                if children:
-                    for c in children:
-                        c.p = float(round(float(c.p) * s, 12))
+        if ssync.is_eos:
+            raise RuntimeError(
+                "LookAhead invariant violated: a terminal representative cannot "
+                "be the exact-prefix member of a nonterminal group"
+            )
 
-        # (6) S_partial 的 p 改写为组内归一化后的 intra[i]
+        # Reference LAS expands exactly one synchronized representative.
+        children: List[Candidate] = list(
+            source_generate(ssync.tokens, ssync.prompt_len) or []
+        )
+        for c in children:
+            c.p = float(c.p) * s
+
+        # S_partial keeps its exact conditional mass.
         for i in spartial_idx:
-            mem[i].p = float(round(float(intra[i]), 12))
+            mem[i].p = float(intra[i])
 
         # (7) 组装下一轮候选：严格不按可见文本合并路径，直接拼接
         out: List[Candidate] = [mem[i] for i in spartial_idx]
@@ -184,9 +174,5 @@ class LookAhead(Disambiguator):
             for c in out:
                 c.p = float(c.p) * scale
 
-        # 终止条件说明：
-        # - 若 ssync 是 eos 且 S_partial 为空 → out==[]，上层会在本步已输出完毕后自然结束。
         self.last_selected = ssync
-        if ssync.is_eos:
-            return ssync
         return out
