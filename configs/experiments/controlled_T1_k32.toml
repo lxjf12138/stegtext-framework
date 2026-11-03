@@ -1,0 +1,208 @@
+schema_version = 2
+name = "controlled_T1_k32"
+
+[source]
+models = ["qwen_instruct", "llama_instruct"]
+profile = "stego"
+prompt_mode = "chat"
+kv_cache = "cpu_snapshots"
+languages = { qwen_instruct = "zh", llama_instruct = "en" }
+sampling_contract = "controlled_topk_T1_v1"
+
+[source.sampling]
+do_sample = true
+temperature = 1.0
+top_p = 1.0
+top_k = 32
+repetition_penalty = 1.0
+min_p = 0.0
+typical_p = 1.0
+
+[inputs]
+ordinary_seed_policy = "independent_conditions_v1"
+seeds = [211, 223]
+prompts = [
+  {id="city_zh", language="zh", text="请用中文写一句自然、完整的句子，描述城市清晨的生活。"},
+  {id="weather_zh", language="zh", text="请用中文写一句自然、完整的话，解释天气预报如何帮助人们安排出行。"},
+  {id="city_en", language="en", text="Write one natural, complete sentence describing early morning life in a city."},
+  {id="weather_en", language="en", text="Write one natural, complete sentence explaining how weather forecasts help people plan a journey."},
+  {id="library_zh", language="zh", text="请用中文写一句自然、完整的话，描述图书馆怎样帮助社区居民学习。"},
+  {id="rain_zh", language="zh", text="请用中文写一句自然、完整的句子，描述雨停后公园里的景象。"},
+  {id="library_en", language="en", text="Write one natural, complete sentence describing how a library helps people in a community learn."},
+  {id="rain_en", language="en", text="Write one natural, complete sentence describing a park just after the rain has stopped."},
+]
+
+[message]
+mode = "fixture"
+bits = 131072
+pattern = "random"
+delivery = "prefix_stream"
+
+[randomness]
+mode = "fixture"
+
+[stopping]
+mode = "token_budget"
+max_new_tokens = 256
+watchdog_generated_tokens = 512
+watchdog_protocol_decisions = 16384
+
+
+[execution]
+order = "hash_interleaved_v1"
+order_seed = 631
+
+[[variants]]
+id = "ordinary"
+kind = "ordinary"
+
+[[variants]]
+id = "direct_imec"
+kind = "planner"
+method = "direct"
+coder = "imec_prefix_exact"
+coder_parameters = {block_size=6, window_size=3, coupling_strategy="greedy", schedule="max_entropy"}
+
+[[variants]]
+id = "direct_discop"
+kind = "planner"
+method = "direct"
+coder = "discop_copy"
+
+[[variants]]
+id = "basic_imec"
+kind = "planner"
+method = "basic_upstream"
+coder = "imec_prefix_exact"
+coder_parameters = {block_size=6, window_size=3, coupling_strategy="greedy", schedule="max_entropy"}
+
+[[variants]]
+id = "basic_discop"
+kind = "planner"
+method = "basic_upstream"
+coder = "discop_copy"
+
+[[variants]]
+id = "mwis_imec"
+kind = "planner"
+method = "mwis_upstream"
+coder = "imec_prefix_exact"
+coder_parameters = {block_size=6, window_size=3, coupling_strategy="greedy", schedule="max_entropy"}
+
+[[variants]]
+id = "mwis_discop"
+kind = "planner"
+method = "mwis_upstream"
+coder = "discop_copy"
+
+[[variants]]
+id = "stepwise_imec"
+kind = "planner"
+method = "stepwise_reviewed"
+coder = "imec_prefix_exact"
+coder_parameters = {block_size=6, window_size=3, coupling_strategy="greedy", schedule="max_entropy"}
+
+[[variants]]
+id = "stepwise_discop"
+kind = "planner"
+method = "stepwise_reviewed"
+coder = "discop_copy"
+
+[[variants]]
+id = "syncpool_imec"
+kind = "planner"
+method = "syncpool"
+coder = "imec_prefix_exact"
+coder_parameters = {block_size=6, window_size=3, coupling_strategy="greedy", schedule="max_entropy"}
+
+[[variants]]
+id = "syncpool_discop"
+kind = "planner"
+method = "syncpool"
+coder = "discop_copy"
+
+[[variants]]
+id = "fullsync_imec"
+kind = "planner"
+method = "fullsync"
+coder = "imec_prefix_exact"
+coder_parameters = {block_size=6, window_size=3, coupling_strategy="greedy", schedule="max_entropy"}
+
+[[variants]]
+id = "fullsync_discop"
+kind = "planner"
+method = "fullsync"
+coder = "discop_copy"
+
+[[variants]]
+id = "las_imec"
+kind = "planner"
+method = "las"
+coder = "imec_prefix_exact"
+coder_parameters = {block_size=6, window_size=3, coupling_strategy="greedy", schedule="max_entropy"}
+
+[[variants]]
+id = "las_discop"
+kind = "planner"
+method = "las"
+coder = "discop_copy"
+
+[[variants]]
+id = "adaptive_025_imec"
+kind = "planner"
+method = "adaptive"
+coder = "imec_prefix_exact"
+tau = 0.25
+coder_parameters = {block_size=6, window_size=3, coupling_strategy="greedy", schedule="max_entropy"}
+
+[[variants]]
+id = "adaptive_025_discop"
+kind = "planner"
+method = "adaptive"
+coder = "discop_copy"
+tau = 0.25
+
+[[variants]]
+id = "adaptive_050_imec"
+kind = "planner"
+method = "adaptive"
+coder = "imec_prefix_exact"
+tau = 0.5
+coder_parameters = {block_size=6, window_size=3, coupling_strategy="greedy", schedule="max_entropy"}
+
+[[variants]]
+id = "adaptive_050_discop"
+kind = "planner"
+method = "adaptive"
+coder = "discop_copy"
+tau = 0.5
+
+[[variants]]
+id = "adaptive_100_imec"
+kind = "planner"
+method = "adaptive"
+coder = "imec_prefix_exact"
+tau = 1.0
+coder_parameters = {block_size=6, window_size=3, coupling_strategy="greedy", schedule="max_entropy"}
+
+[[variants]]
+id = "adaptive_100_discop"
+kind = "planner"
+method = "adaptive"
+coder = "discop_copy"
+tau = 1.0
+
+[[variants]]
+id = "adaptive_200_imec"
+kind = "planner"
+method = "adaptive"
+coder = "imec_prefix_exact"
+tau = 2.0
+coder_parameters = {block_size=6, window_size=3, coupling_strategy="greedy", schedule="max_entropy"}
+
+[[variants]]
+id = "adaptive_200_discop"
+kind = "planner"
+method = "adaptive"
+coder = "discop_copy"
+tau = 2.0

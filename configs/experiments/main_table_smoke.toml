@@ -1,0 +1,84 @@
+# Short end-to-end check of the main-comparison methods on both source models:
+# the settings of the main runs at k=32, with two fixed prompts and 16 body tokens.
+schema_version = 2
+name = "main_table_smoke"
+
+[source]
+models = ["qwen_instruct", "llama_instruct"]
+profile = "stego"
+prompt_mode = "chat"
+kv_cache = "cpu_snapshots"
+languages = {qwen_instruct="zh", llama_instruct="en"}
+sampling_contract = "controlled_topk_T1_v1"
+sampling = {do_sample=true, temperature=1.0, top_p=1.0, top_k=32, repetition_penalty=1.0, min_p=0.0, typical_p=1.0}
+
+[inputs]
+ordinary_seed_policy = "independent_conditions_v1"
+seeds = [211]
+prompts = [
+  {id="city_zh", language="zh", text="请用中文写一句自然、完整的句子，描述城市清晨的生活。"},
+  {id="city_en", language="en", text="Write one natural, complete sentence describing early morning life in a city."},
+]
+
+[message]
+mode = "fixture"
+bits = 131072
+pattern = "random"
+delivery = "prefix_stream"
+
+[randomness]
+mode = "fixture"
+
+[stopping]
+mode = "token_budget"
+max_new_tokens = 16
+watchdog_generated_tokens = 512
+watchdog_protocol_decisions = 16384
+
+[[variants]]
+id = "ordinary"
+kind = "ordinary"
+
+[[variants]]
+id = "basic_imec"
+kind = "planner"
+method = "basic_bytes_v1"
+coder = "imec_prefix_exact"
+coder_parameters = {block_size=6, window_size=3, coupling_strategy="greedy", schedule="head_first"}
+
+[[variants]]
+id = "mwis_imec"
+kind = "planner"
+method = "mwis_bytes_v1"
+coder = "imec_prefix_exact"
+coder_parameters = {block_size=6, window_size=3, coupling_strategy="greedy", schedule="head_first"}
+
+[[variants]]
+id = "stepwise_imec"
+kind = "planner"
+method = "stepwise_chat_v1"
+coder = "imec_prefix_exact"
+coder_parameters = {block_size=6, window_size=3, coupling_strategy="greedy", schedule="head_first"}
+
+[[variants]]
+id = "syncpool_imec"
+kind = "planner"
+method = "syncpool"
+coder = "imec_prefix_exact"
+coder_parameters = {block_size=6, window_size=3, coupling_strategy="greedy", schedule="head_first"}
+implementation = "shared_planner_v1"
+
+[[variants]]
+id = "las_imec"
+kind = "planner"
+method = "las"
+coder = "imec_prefix_exact"
+coder_parameters = {block_size=6, window_size=3, coupling_strategy="greedy", schedule="head_first"}
+
+[[variants]]
+id = "adaptive_4000_imec"
+kind = "planner"
+method = "adaptive"
+coder = "imec_prefix_exact"
+tau = 4.0
+coder_parameters = {block_size=6, window_size=3, coupling_strategy="greedy", schedule="head_first"}

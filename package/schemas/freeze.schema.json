@@ -1,0 +1,1 @@
+{"type":"object","required":["source_tree_sha256","model_revisions","tokenizer_revisions","method_epoch","created_utc"],"additionalProperties":true}

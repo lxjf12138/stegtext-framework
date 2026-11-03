@@ -1,0 +1,78 @@
+extends = "instruct_quality.toml"
+name = "instruct_methods_zh_en"
+
+[inputs]
+seeds = [11]
+prompts = [
+  { id = "news_en", language = "en", text = "Write a short local news report in English, in exactly three sentences and one paragraph. A new community library opened on Monday; it has a children's reading room, quiet study desks, and public computers, and will host free weekend reading activities for residents." },
+  { id = "news_zh", language = "zh", text = "请用中文写一则社区新闻，共三句话，合成一个自然段。素材：青禾社区图书馆于周一正式开放，设有儿童阅读区、自习室和公共电脑，周末将为居民举办免费阅读活动。" },
+]
+
+[stopping]
+max_steps = 96
+utf8_extension = 32
+
+[[variants]]
+id = "ordinary"
+kind = "ordinary"
+
+[[variants]]
+id = "fullsync"
+kind = "planner"
+method = "fullsync"
+coder = "discop_copy"
+
+[[variants]]
+id = "stepwise_reviewed"
+kind = "planner"
+method = "stepwise_reviewed"
+coder = "discop_copy"
+
+[[variants]]
+id = "syncpool_imec"
+kind = "planner"
+method = "syncpool"
+coder = "imec"
+
+[[variants]]
+id = "syncpool_range_ac"
+kind = "planner"
+method = "syncpool"
+coder = "range_ac"
+
+[[variants]]
+id = "syncpool_huffman"
+kind = "planner"
+method = "syncpool"
+coder = "huffman"
+
+[[variants]]
+id = "liao_stability_reviewed"
+kind = "planner"
+method = "syncpool"
+coder = "liao_stability_reviewed"
+
+[[variants]]
+id = "anstega_keyed"
+kind = "carrier"
+system = "anstega_keyed"
+
+[[variants]]
+id = "meteor_borrowed"
+kind = "carrier"
+system = "meteor_borrowed"
+
+[[variants]]
+id = "sparsamp"
+kind = "upstream"
+system = "sparsamp"
+
+[[variants]]
+id = "rrc_verified"
+kind = "upstream"
+system = "rrc_verified"
+
+[[variants]]
+id = "arimec"
+kind = "upstream"
+system = "arimec"

@@ -1,0 +1,51 @@
+schema_version = 1
+name = "instruct_quality_zh_en"
+
+[source]
+models = ["qwen_instruct", "llama_instruct"]
+profile = "stego"
+prompt_mode = "chat"
+kv_cache = "canonical"
+languages = { qwen_instruct = "zh", llama_instruct = "en" }
+
+[inputs]
+seeds = [11, 29]
+prompts = [
+  { id = "news_en", language = "en", text = "Write a short local news report in English, in exactly three sentences and one paragraph. A new community library opened on Monday; it has a children's reading room, quiet study desks, and public computers, and will host free weekend reading activities for residents." },
+  { id = "news_zh", language = "zh", text = "请用中文写一则社区新闻，共三句话，合成一个自然段。素材：青禾社区图书馆于周一正式开放，设有儿童阅读区、自习室和公共电脑，周末将为居民举办免费阅读活动。" },
+]
+
+[message]
+mode = "fixture"
+bits = 131072
+pattern = "random"
+
+[randomness]
+mode = "fixture"
+
+[stopping]
+max_steps = 192
+utf8_extension = 32
+
+[[variants]]
+id = "ordinary"
+kind = "ordinary"
+
+[[variants]]
+id = "syncpool"
+kind = "planner"
+method = "syncpool"
+coder = "discop_copy"
+
+[[variants]]
+id = "las"
+kind = "planner"
+method = "las"
+coder = "discop_copy"
+
+[[variants]]
+id = "adaptive"
+kind = "planner"
+method = "adaptive"
+coder = "discop_copy"
+tau = 0.5

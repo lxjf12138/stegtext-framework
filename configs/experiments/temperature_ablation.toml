@@ -1,0 +1,5 @@
+extends = "smoke.toml"
+name = "temperature_ablation"
+
+[source.sampling]
+temperature = 0.9

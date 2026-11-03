@@ -1,0 +1,9 @@
+extends = "instruct_quality.toml"
+name = "instruct_single_zh_en"
+
+[inputs]
+seeds = [11]
+prompts = [
+  { id = "single_en", language = "en", text = "In one sentence, describe a community library where residents can borrow books, study quietly, and use public computers." },
+  { id = "single_zh", language = "zh", text = "请用一句中文介绍社区图书馆，包含借阅图书、安静自习和使用公共电脑这三项服务。" },
+]

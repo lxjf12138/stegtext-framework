@@ -1,0 +1,67 @@
+module
+
+public import StegaTextProofs.IntegrableStoppingTails
+public import StegaTextProofs.UnboundedStoppedSum
+public import StegaTextProofs.UnboundedStoppedComparison
+public import StegaTextProofs.LASUniformEntropyBound
+public import StegaTextProofs.StoppingTailExamples
+
+public section
+
+#print axioms StegaTextProofs.StoppingTails.tail_norm_le
+#print axioms StegaTextProofs.StoppingTails.tail_nonneg
+#print axioms StegaTextProofs.StoppingTails.tail_integrable
+#print axioms StegaTextProofs.StoppingTails.tail_tendsto_zero
+#print axioms StegaTextProofs.StoppingTails.integral_tail_tendsto_zero
+#print axioms StegaTextProofs.StoppingTails.remaining_nonneg
+#print axioms StegaTextProofs.StoppingTails.remaining_le_time
+#print axioms StegaTextProofs.StoppingTails.remaining_measurable
+#print axioms StegaTextProofs.StoppingTails.remaining_integrable
+#print axioms StegaTextProofs.StoppingTails.integral_remaining_tendsto_zero
+#print axioms StegaTextProofs.StoppingTails.integrable_of_conditional_tail_bound
+#print axioms StegaTextProofs.StoppingTails.integral_le_tail_of_conditional_bound
+#print axioms StegaTextProofs.StoppingTails.integral_potential_tendsto_zero
+#print axioms StegaTextProofs.StoppedSum.partial_zero
+#print axioms StegaTextProofs.StoppedSum.partial_succ
+#print axioms StegaTextProofs.StoppedSum.partial_eq_total
+#print axioms StegaTextProofs.StoppedSum.partial_nonneg
+#print axioms StegaTextProofs.StoppedSum.total_nonneg
+#print axioms StegaTextProofs.StoppedSum.partial_le_total
+#print axioms StegaTextProofs.StoppedSum.total_le_time
+#print axioms StegaTextProofs.StoppedSum.truncation_error_le
+#print axioms StegaTextProofs.StoppedSum.partial_tendsto_total
+#print axioms StegaTextProofs.StoppedSum.total_measurable
+#print axioms StegaTextProofs.StoppedSum.partial_measurable
+#print axioms StegaTextProofs.StoppedSum.total_integrable
+#print axioms StegaTextProofs.StoppedSum.partial_integrable
+#print axioms StegaTextProofs.StoppedSum.integral_partial_tendsto_total
+#print axioms StegaTextProofs.StoppedSum.integral_truncation_error
+#print axioms StegaTextProofs.StoppedSum.stopped_step_integrable
+#print axioms StegaTextProofs.StoppedSum.finite_conditional_comparison
+#print axioms StegaTextProofs.StoppedSum.unbounded_stopped_comparison
+#print axioms StegaTextProofs.StoppedSum.finite_conditional_error_bound
+#print axioms StegaTextProofs.FiniteLaw.entropyNat_le_card
+#print axioms StegaTextProofs.TokenSource.mem_suffixAlphabet
+#print axioms StegaTextProofs.TokenSource.LASState.initial_residualSuffix
+#print axioms StegaTextProofs.TokenSource.LASState.pool_residual_suffix
+#print axioms StegaTextProofs.TokenSource.LASState.next_residualSuffix
+#print axioms StegaTextProofs.TokenSource.LASState.group_card_le_suffixAlphabet
+#print axioms StegaTextProofs.TokenSource.LASState.group_entropy_le_suffixAlphabet
+#print axioms StegaTextProofs.TokenSource.LASState.protocol_payload_entropy_bound
+#print axioms StegaTextProofs.TokenSource.LASState.initial_protocol_payload_entropy_bound
+#print axioms StegaTextProofs.StoppingTailExamples.spike_nonneg
+#print axioms StegaTextProofs.StoppingTailExamples.spike_measurable
+#print axioms StegaTextProofs.StoppingTailExamples.spike_integrable
+#print axioms StegaTextProofs.StoppingTailExamples.integral_spike
+#print axioms StegaTextProofs.StoppingTailExamples.spike_eventually_zero
+#print axioms StegaTextProofs.StoppingTailExamples.spike_tendsto_zero
+#print axioms StegaTextProofs.StoppingTailExamples.integral_spike_not_tendsto_zero
+#print axioms StegaTextProofs.StoppingTailExamples.no_integrable_spike_envelope
+#print axioms StegaTextProofs.StoppingTails.tail
+#print axioms StegaTextProofs.StoppingTails.remaining
+#print axioms StegaTextProofs.StoppedSum.partialSum
+#print axioms StegaTextProofs.StoppedSum.total
+#print axioms StegaTextProofs.ProtocolTree.PayloadEntropyBound
+#print axioms StegaTextProofs.TokenSource.suffixAlphabet
+#print axioms StegaTextProofs.TokenSource.LASState.ResidualSuffix
+#print axioms StegaTextProofs.StoppingTailExamples.spike

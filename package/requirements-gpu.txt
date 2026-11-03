@@ -1,0 +1,7 @@
+# Install PyTorch using the command appropriate for the target CUDA/driver first.
+transformers>=4.51
+accelerate>=1.0
+numpy>=1.24
+pandas>=2.0
+pyarrow>=15
+pytest>=8

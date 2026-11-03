@@ -1,0 +1,42 @@
+extends = "sentence_imec_base.toml"
+name = "sentence_T1_coder_audit_k32"
+
+[source]
+sampling_contract = "controlled_topk_T1_v1"
+[source.sampling]
+do_sample = true
+temperature = 1.0
+top_p = 1.0
+top_k = 32
+repetition_penalty = 1.0
+min_p = 0.0
+typical_p = 1.0
+
+[stopping]
+law_policy = "atomic_operational_v1"
+
+[[variants]]
+id = "syncpool_imec_terminal"
+kind = "planner"
+method = "syncpool"
+coder = "imec_prefix_exact"
+coder_parameters = {block_size=6, window_size=3, coupling_strategy="greedy", schedule="max_entropy"}
+
+[[variants]]
+id = "las_imec_terminal"
+kind = "planner"
+method = "las"
+coder = "imec_prefix_exact"
+coder_parameters = {block_size=6, window_size=3, coupling_strategy="greedy", schedule="max_entropy"}
+
+[[variants]]
+id = "syncpool_discop"
+kind = "planner"
+method = "syncpool"
+coder = "discop_copy"
+
+[[variants]]
+id = "las_discop"
+kind = "planner"
+method = "las"
+coder = "discop_copy"

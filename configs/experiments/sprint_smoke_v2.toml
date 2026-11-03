@@ -1,0 +1,55 @@
+schema_version = 2
+name = "sprint_smoke_natural_eos_v2"
+
+[source]
+models = ["qwen_instruct", "llama_instruct"]
+profile = "stego"
+prompt_mode = "chat"
+kv_cache = "canonical"
+languages = { qwen_instruct = "zh", llama_instruct = "en" }
+
+[inputs]
+seeds = [11]
+prompts = [
+  {id="story_zh", language="zh", text="请用中文讲述一个社区志愿者的一段经历，语言自然，内容完整。"},
+  {id="explain_zh", language="zh", text="请用中文解释为什么城市公共图书馆对社区重要，写成自然段落。"},
+  {id="story_en", language="en", text="Tell a coherent short story about a volunteer helping a neighbor, using natural English."},
+  {id="explain_en", language="en", text="Explain in natural English why public libraries matter to their communities."},
+]
+
+[message]
+mode = "fixture"
+bits = 131072
+pattern = "random"
+delivery = "prefix_stream"
+
+[randomness]
+mode = "fixture"
+
+[stopping]
+mode = "natural_eos_only"
+watchdog_generated_tokens = 512
+watchdog_protocol_decisions = 1024
+
+[[variants]]
+id = "ordinary"
+kind = "ordinary"
+
+[[variants]]
+id = "syncpool"
+kind = "planner"
+method = "syncpool"
+coder = "discop_copy"
+
+[[variants]]
+id = "las"
+kind = "planner"
+method = "las"
+coder = "discop_copy"
+
+[[variants]]
+id = "adaptive"
+kind = "planner"
+method = "adaptive"
+coder = "discop_copy"
+tau = 0.5

@@ -1,0 +1,61 @@
+module
+
+public import StegaTextProofs.WeightedEntropy
+public import StegaTextProofs.VisibleBoundary
+public import StegaTextProofs.LASNodeInvariant
+public import StegaTextProofs.FrontierSeparation
+public import StegaTextProofs.FrontierTransitions
+public import StegaTextProofs.SourceNodeRows
+public import StegaTextProofs.SelectiveEntropy
+public import StegaTextProofs.LASSelectiveComparison
+public import StegaTextProofs.SelectiveExamples
+
+/-! Axiom audit of the selective-entropy proof batch. -/
+
+#print axioms StegaTextProofs.weightedEntropy_zero
+#print axioms StegaTextProofs.weightedEntropy_smul
+#print axioms StegaTextProofs.weightedEntropy_law
+#print axioms StegaTextProofs.weightedEntropy_single
+#print axioms StegaTextProofs.FiniteLaw.prob_le_one
+#print axioms StegaTextProofs.FiniteLaw.entropyNat_nonneg
+#print axioms StegaTextProofs.weightedEntropy_normalize
+#print axioms StegaTextProofs.weightedEntropy_nonneg
+#print axioms StegaTextProofs.weights_zero_of_sum_zero
+#print axioms StegaTextProofs.weightedEntropy_sum_laws
+#print axioms StegaTextProofs.weightedEntropy_sum_le
+#print axioms StegaTextProofs.weightedEntropy_expect_le
+#print axioms StegaTextProofs.weightedEntropy_sigma_chain
+#print axioms StegaTextProofs.weightedEntropy_prod_chain
+#print axioms StegaTextProofs.FiniteLaw.entropyNat_mix_le
+#print axioms StegaTextProofs.PrefixGrouping.native_group_fixed_by_visible_prefix
+#print axioms StegaTextProofs.PrefixGrouping.native_group_fixed_at_history
+#print axioms StegaTextProofs.nodeWeights_single
+#print axioms StegaTextProofs.LASGroup.nodeWeights_no_exact
+#print axioms StegaTextProofs.LASGroup.node_entropy_collapse_invariant
+#print axioms StegaTextProofs.node_separation_of_visible_frontier
+#print axioms StegaTextProofs.history_antichain_expand
+#print axioms StegaTextProofs.history_antichain_restrict
+#print axioms StegaTextProofs.history_antichain_collapse
+#print axioms StegaTextProofs.visible_boundary_of_group
+#print axioms StegaTextProofs.sourceNodeRows_nonzero
+#print axioms StegaTextProofs.sourceNodeRows_support
+#print axioms StegaTextProofs.source_node_entropy_collapse_invariant
+#print axioms StegaTextProofs.FiniteLaw.expect_sum
+#print axioms StegaTextProofs.DecisionTree.selective_add_complement
+#print axioms StegaTextProofs.DecisionTree.selective_nonneg
+#print axioms StegaTextProofs.DecisionTree.selective_expect_le
+#print axioms StegaTextProofs.DecisionTree.selective_mix_le
+#print axioms StegaTextProofs.DecisionTree.selective_point
+#print axioms StegaTextProofs.DecisionTree.selective_collapse_invariant
+#print axioms StegaTextProofs.FiniteHorizon.budget_smul
+#print axioms StegaTextProofs.LASDecisionModel.expected_potential_after_collapse
+#print axioms StegaTextProofs.LASDecisionModel.selective_step_inequality
+#print axioms StegaTextProofs.LASDecisionModel.finite_selective_comparison
+#print axioms StegaTextProofs.LASDecisionModel.terminating_selective_comparison
+#print axioms StegaTextProofs.LASDecisionModel.potential_zero_of_resolved
+#print axioms StegaTextProofs.LASDecisionModel.terminating_selective_comparison_bits
+#print axioms StegaTextProofs.SelectiveExamples.merger_weights_normalized
+#print axioms StegaTextProofs.SelectiveExamples.merger_pending_entropy
+#print axioms StegaTextProofs.SelectiveExamples.merger_total_entropy
+#print axioms StegaTextProofs.SelectiveExamples.merger_old_increment_negative
+#print axioms StegaTextProofs.SelectiveExamples.merger_entropy_gap

@@ -1,0 +1,63 @@
+module
+
+public import StegaTextProofs.InformationGap
+public import StegaTextProofs.LASAbsoluteLocal
+public import StegaTextProofs.VisibleLASPotential
+public import StegaTextProofs.LASAbsoluteCapacity
+
+public section
+
+#print axioms StegaTextProofs.FiniteLaw.informationNat_nonneg
+#print axioms StegaTextProofs.FiniteLaw.informationNat_le_entropy
+#print axioms StegaTextProofs.FiniteLaw.mix_const
+#print axioms StegaTextProofs.FiniteLaw.informationNat_const
+#print axioms StegaTextProofs.FiniteLaw.informationNat_posterior
+#print axioms StegaTextProofs.FiniteLaw.informationNat_mix_channel_le
+#print axioms StegaTextProofs.FiniteLaw.mix_map
+#print axioms StegaTextProofs.FiniteLaw.informationNat_data_processing
+#print axioms StegaTextProofs.FiniteLaw.informationNat_map_le
+#print axioms StegaTextProofs.FiniteLaw.mix_eq_joint_map
+#print axioms StegaTextProofs.FiniteLaw.entropyNat_mix_eq_of_disjoint
+#print axioms StegaTextProofs.LASGroup.collapse_channel_mean
+#print axioms StegaTextProofs.LASGroup.absoluteGapNat_eq_information
+#print axioms StegaTextProofs.LASGroup.absoluteGapNat_nonneg
+#print axioms StegaTextProofs.LASGroup.absoluteGapNat_le_exact_information
+#print axioms StegaTextProofs.LASGroup.absoluteGapNat_le_exact_entropy
+#print axioms StegaTextProofs.LASGroup.absoluteGapNat_zero_of_exact_constant
+#print axioms StegaTextProofs.TokenSource.LASState.pool_visibleLaw
+#print axioms StegaTextProofs.TokenSource.LASState.next_visibleLaw
+#print axioms StegaTextProofs.TokenSource.LASState.group_visible_prefix
+#print axioms StegaTextProofs.TokenSource.LASState.group_visible_disjoint
+#print axioms StegaTextProofs.TokenSource.LASState.visiblePotential_terminal
+#print axioms StegaTextProofs.TokenSource.LASState.visiblePotential_step
+#print axioms StegaTextProofs.TokenSource.LASState.localGapNat_nonneg
+#print axioms StegaTextProofs.TokenSource.LASState.localGapNat_le_bound
+#print axioms StegaTextProofs.TokenSource.LASState.localGapNat_le_predictive
+#print axioms StegaTextProofs.TokenSource.LASState.localPredictiveBoundNat_le_bound
+#print axioms StegaTextProofs.TokenSource.LASState.accumulated_terminal
+#print axioms StegaTextProofs.TokenSource.LASState.accumulated_mono
+#print axioms StegaTextProofs.TokenSource.LASState.accumulated_zero
+#print axioms StegaTextProofs.TokenSource.LASState.accumulated_gap_nonneg
+#print axioms StegaTextProofs.TokenSource.LASState.visible_gap_telescope
+#print axioms StegaTextProofs.TokenSource.LASState.visible_gap_bounds
+#print axioms StegaTextProofs.TokenSource.las_absolute_gap_eq
+#print axioms StegaTextProofs.TokenSource.las_absolute_gap_bounds
+#print axioms StegaTextProofs.TokenSource.las_predictive_gap_bounds
+#print axioms StegaTextProofs.TokenSource.las_near_visible_upper
+#print axioms StegaTextProofs.FiniteLaw.informationNat
+#print axioms StegaTextProofs.LASGroup.absoluteGapNat
+#print axioms StegaTextProofs.TokenSource.VisibleText
+#print axioms StegaTextProofs.TokenSource.visibleReadout
+#print axioms StegaTextProofs.TokenSource.visibleEntropy
+#print axioms StegaTextProofs.TokenSource.LASState.visibleLaw
+#print axioms StegaTextProofs.TokenSource.LASState.visiblePotentialNat
+#print axioms StegaTextProofs.TokenSource.LASState.candidateVisibleLaw
+#print axioms StegaTextProofs.TokenSource.LASState.groupVisibleChannel
+#print axioms StegaTextProofs.TokenSource.LASState.localGapNat
+#print axioms StegaTextProofs.TokenSource.LASState.localBoundNat
+#print axioms StegaTextProofs.TokenSource.LASState.localPredictiveBoundNat
+#print axioms StegaTextProofs.TokenSource.LASState.accumulated
+#print axioms StegaTextProofs.TokenSource.lasGap
+#print axioms StegaTextProofs.TokenSource.lasGapBound
+#print axioms StegaTextProofs.TokenSource.lasPredictiveGapBound
+#print axioms StegaTextProofs.TokenSource.visibleTextFintype

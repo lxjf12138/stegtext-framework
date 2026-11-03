@@ -1,0 +1,68 @@
+schema_version = 1
+name = "shared_smoke"
+
+[source]
+models = ["qwen", "llama"]
+profile = "stego"
+kv_cache = "canonical"
+
+[inputs]
+seeds = [11]
+prompts = [{ id = "news_en", language = "en", file = "../../research_notes/problem_resolution/prompts/news_en.txt" }]
+
+[message]
+mode = "fixture"
+bits = 131072
+pattern = "random"
+
+[randomness]
+mode = "fixture"
+
+[stopping]
+max_steps = 12
+utf8_extension = 32
+
+[[variants]]
+id = "ordinary"
+kind = "ordinary"
+
+[[variants]]
+id = "syncpool"
+kind = "planner"
+method = "syncpool"
+coder = "discop_copy"
+
+[[variants]]
+id = "las"
+kind = "planner"
+method = "las"
+coder = "discop_copy"
+
+[[variants]]
+id = "adaptive"
+kind = "planner"
+method = "adaptive"
+coder = "discop_copy"
+tau = 0.5
+
+[[variants]]
+id = "stepwise_reviewed"
+kind = "planner"
+method = "stepwise_reviewed"
+coder = "discop_copy"
+
+[[variants]]
+id = "liao_stability_reviewed"
+kind = "planner"
+method = "syncpool"
+coder = "liao_stability_reviewed"
+
+[[variants]]
+id = "anstega_keyed"
+kind = "carrier"
+system = "anstega_keyed"
+
+[[variants]]
+id = "meteor_borrowed"
+kind = "carrier"
+system = "meteor_borrowed"

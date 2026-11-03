@@ -1,0 +1,16 @@
+# Local environments and caches
+.venv/
+.cache/
+.tools/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Downloaded models and upstream baselines, run outputs
+/models/
+/external_baselines/
+/runs/
+/reports/
+
+# Lean build output
+formal/.lake/

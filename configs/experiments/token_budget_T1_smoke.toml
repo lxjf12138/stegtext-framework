@@ -1,0 +1,12 @@
+extends = "token_budget_T1.toml"
+name = "token_budget_T1_cap8_smoke"
+
+[inputs]
+seeds = [211]
+prompts = [
+  {id="city_zh", language="zh", text="请用中文写一句自然、完整的句子，描述城市清晨的生活。"},
+  {id="city_en", language="en", text="Write one natural, complete sentence describing early morning life in a city."},
+]
+
+[stopping]
+max_new_tokens = 8

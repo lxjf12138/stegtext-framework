@@ -1,0 +1,4 @@
+kind="top_k"
+top_k=32
+temperature=1.0
+usage="historical-regime diagnostic only"

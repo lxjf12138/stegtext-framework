@@ -1,0 +1,14 @@
+[model]
+repo = "Qwen/Qwen3-4B-Base"
+revision = "RESOLVE_AND_FREEZE_BEFORE_EXPERIMENT"
+dtype = "bfloat16"
+quantization = "none"
+trust_remote_code = false
+prompt_mode = "plain_completion"
+add_special_tokens = true
+primary_language = "zh"
+
+[hardware]
+expected_gpu_class = "RTX 4070 SUPER 12GB or larger"
+batch_size = 1
+on_oom = "fail_do_not_auto_quantize"

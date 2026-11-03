@@ -1,0 +1,51 @@
+schema_version = 2
+name = "sentence_imec_official"
+
+[source]
+models = ["qwen_instruct", "llama_instruct"]
+profile = "stego"
+prompt_mode = "chat"
+kv_cache = "cpu_snapshots"
+languages = { qwen_instruct = "zh", llama_instruct = "en" }
+
+[inputs]
+seeds = [211, 223]
+prompts = [
+  {id="city_zh", language="zh", text="请用中文写一句自然、完整的句子，描述城市清晨的生活。"},
+  {id="weather_zh", language="zh", text="请用中文写一句自然、完整的话，解释天气预报如何帮助人们安排出行。"},
+  {id="city_en", language="en", text="Write one natural, complete sentence describing early morning life in a city."},
+  {id="weather_en", language="en", text="Write one natural, complete sentence explaining how weather forecasts help people plan a journey."},
+]
+
+[message]
+mode = "fixture"
+bits = 131072
+pattern = "random"
+delivery = "prefix_stream"
+
+[randomness]
+mode = "fixture"
+
+[stopping]
+mode = "sentence_boundary"
+sentences = 1
+watchdog_generated_tokens = 256
+watchdog_protocol_decisions = 512
+
+[[variants]]
+id = "ordinary"
+kind = "ordinary"
+
+[[variants]]
+id = "syncpool_imec"
+kind = "planner"
+method = "syncpool"
+coder = "imec_window_exact"
+coder_parameters = {block_size=6, window_size=3}
+
+[[variants]]
+id = "las_imec"
+kind = "planner"
+method = "las"
+coder = "imec_window_exact"
+coder_parameters = {block_size=6, window_size=3}

@@ -1,0 +1,47 @@
+{
+  "description": "Upstream baseline and coder repositories at the commits used by this code; fetch them with scripts/fetch_baselines.sh.",
+  "repositories": [
+    {
+      "name": "SyncPool",
+      "role": "tokenization baseline",
+      "origin_url": "https://github.com/7-yaya/SyncPool.git",
+      "head_commit": "a543ef23e18de870f9de63f81bffd4b6fc6414ed",
+      "local_path": "external_baselines/SyncPool"
+    },
+    {
+      "name": "Stepwise/Consistency",
+      "role": "tokenization baseline",
+      "origin_url": "https://github.com/ryehr/Consistency.git",
+      "head_commit": "962473d36905f2bd3e9125ae814ee0fd1963241c",
+      "local_path": "external_baselines/Consistency"
+    },
+    {
+      "name": "DisCop",
+      "role": "coder",
+      "origin_url": "https://github.com/comydream/Discop.git",
+      "head_commit": "3c3a10099a242eae405b49cc4d09fba1abb148ad",
+      "local_path": "external_baselines/Discop"
+    },
+    {
+      "name": "iMEC",
+      "role": "coder",
+      "origin_url": "https://github.com/schroederdewitt/perfectly-secure-steganography.git",
+      "head_commit": "cc36ae0b585fae4c7fcf65f7ee4db43aac2edd28",
+      "local_path": "external_baselines/iMEC"
+    },
+    {
+      "name": "RRC",
+      "role": "coder/complete-system baseline",
+      "origin_url": "https://github.com/ryehr/RRC_steganography.git",
+      "head_commit": "dae326259e4fca8bc4fcf460dafdbc0e88a0a71a",
+      "local_path": "external_baselines/RRC"
+    },
+    {
+      "name": "ARIMEC",
+      "role": "autoregressive partition-based coupling coder/theoretical extension",
+      "origin_url": "https://github.com/ssokota/mec.git",
+      "head_commit": "e56ad6619498914fe289d91516febb1fa3be050f",
+      "local_path": "external_baselines/ARIMEC"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+experiment_id="llama32_en_smoke_v1"
+model="llama32_3b_base"
+prompt_mode="plain_completion"
+language="en"
+sampler="full_softmax"
+coder="discop"
+protocols=["syncpool","belief_fullsync","always_las"]
+prompts=3
+replicates=3
+stopping="fixed_visible_bytes"
+visible_bytes=128
+purpose="Gate-5 small validation; not final evidence"

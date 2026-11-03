@@ -1,0 +1,4 @@
+extends = "sentence_T1_coder_audit.toml"
+name = "sentence_T1_coder_audit_k256"
+[source.sampling]
+top_k = 256

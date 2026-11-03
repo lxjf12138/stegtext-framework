@@ -1,0 +1,46 @@
+module
+
+public import StegaTextProofs.FiniteLawMeasure
+public import StegaTextProofs.MeasureConditionalEntropy
+public import StegaTextProofs.ProtocolMeasureTapes
+public import StegaTextProofs.MeasureConditionalComparison
+public import StegaTextProofs.MeasureTapeExamples
+
+#print axioms StegaTextProofs.FiniteLaw.integral_toMeasure
+#print axioms StegaTextProofs.FiniteLaw.ofMeasure_expect
+#print axioms StegaTextProofs.FiniteLaw.ofMeasure_toMeasure
+#print axioms StegaTextProofs.FiniteLaw.integral_finite_read
+#print axioms StegaTextProofs.FiniteLaw.integrable_finite_read
+#print axioms StegaTextProofs.condExp_fst_prod
+#print axioms StegaTextProofs.finite_channel_condProb
+#print axioms StegaTextProofs.conditionalEntropy_finite_channel
+#print axioms StegaTextProofs.ProtocolTree.payload_readout_law
+#print axioms StegaTextProofs.ProtocolTree.averaged_givenLaw
+#print axioms StegaTextProofs.ProtocolTree.measureConditionalEntropy_eq_finite
+#print axioms StegaTextProofs.ProtocolTree.measureConditionalEntropy_eq_integral
+#print axioms StegaTextProofs.ProtocolTree.measureConditionalEntropy_eq_budget
+#print axioms StegaTextProofs.ProtocolTree.measureConditionalEntropy_eq_observed
+#print axioms StegaTextProofs.ProtocolTree.measureConditionalEntropy_finite_raw
+#print axioms StegaTextProofs.ProtocolTree.measure_tapes_output_expect
+#print axioms StegaTextProofs.TokenSource.finite_las_conditionalEntropy_ge_native_measures
+#print axioms StegaTextProofs.TokenSource.finite_las_conditionalEntropy_ge_native_measure_preserving
+#print axioms StegaTextProofs.TokenSource.native_measure_tapes_output
+#print axioms StegaTextProofs.TokenSource.las_measure_tapes_output
+#print axioms StegaTextProofs.MeasureTapeExamples.halfCoin_measurable
+#print axioms StegaTextProofs.MeasureTapeExamples.halfCoin_law
+#print axioms StegaTextProofs.MeasureTapeExamples.fair_xor
+#print axioms StegaTextProofs.MeasureTapeExamples.continuous_xor_conditionalEntropy
+#print axioms StegaTextProofs.MeasureTapeExamples.extra_raw_coordinates_entropy
+#print axioms StegaTextProofs.FiniteLaw.toPMF
+#print axioms StegaTextProofs.FiniteLaw.toMeasure
+#print axioms StegaTextProofs.FiniteLaw.ofMeasure
+#print axioms StegaTextProofs.conditionalEntropy
+#print axioms StegaTextProofs.ProtocolTree.measureConditionalEntropy
+#print axioms StegaTextProofs.MeasureTapeExamples.uniform01
+#print axioms StegaTextProofs.MeasureTapeExamples.halfCoin
+#print axioms StegaTextProofs.FiniteLaw.toMeasure_probability
+#print axioms StegaTextProofs.ProtocolTree.tapeMeasurableSpace
+#print axioms StegaTextProofs.ProtocolTree.tapeMeasurableSingletonClass
+#print axioms StegaTextProofs.ProtocolTree.payloadTapeMeasurableSpace
+#print axioms StegaTextProofs.ProtocolTree.payloadTapeMeasurableSingletonClass
+#print axioms StegaTextProofs.MeasureTapeExamples.uniform01_probability

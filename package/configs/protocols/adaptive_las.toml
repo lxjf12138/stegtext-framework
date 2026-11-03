@@ -1,0 +1,4 @@
+name="adaptive_las"
+score="u_post_bits"
+tau="UNSET_DEVELOPMENT_CALIBRATION_REQUIRED"
+rule="LAS iff U_post >= tau, else FullSync"

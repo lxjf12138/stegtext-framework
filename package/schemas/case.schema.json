@@ -1,0 +1,11 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"StegText replayable case",
+  "type":"object",
+  "required":["schema_version","case_id","method_epoch","model","prompt","sampler","protocol","coder","stopping","rng"],
+  "properties":{
+    "schema_version":{"type":"string"},"case_id":{"type":"string"},"method_epoch":{"type":"string"},
+    "model":{"type":"object"},"prompt":{"type":"object"},"sampler":{"type":"object"},
+    "protocol":{"type":"object"},"coder":{"type":"object"},"stopping":{"type":"object"},"rng":{"type":"object"}
+  },"additionalProperties":true
+}
